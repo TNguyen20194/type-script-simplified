@@ -4,15 +4,14 @@
  */
 
 function getSecond<ArrayType>(array: ArrayType[]) {
-    return array[1]
-};
+  return array[1];
+}
 
 // const a = [1, 2, 3]
 // const b = ["sdf", "sdf"]
 
 // const retA = getSecond(a)
 // const retB = getSecond(b)
-
 
 // Constraint generic type to be an object with default value
 /**
@@ -41,37 +40,35 @@ const B: BlogResponse = {
     isError: false
 }
  */
-const b: Array<number> = [1, 2, 3]
+const b: Array<number> = [1, 2, 3];
 
 type APIResponse<TData> = {
-    data: TData
-    isError: boolean
+  data: TData;
+  isError: boolean;
 };
 
-
 const a: APIResponse<number[]> = {
-    data: [1, 2, 3],
-    isError: false
-}
+  data: [1, 2, 3],
+  isError: false,
+};
 
 // Function takes in Typle type array
 function aToO<T>(array: [string, T][]) {
-    const obj: {
-        [index: string]: T
-    } = {}
+  const obj: {
+    [index: string]: T;
+  } = {};
 
-    array.forEach(([key, value]) => {
-        obj[key] = value
-    })
+  array.forEach(([key, value]) => {
+    obj[key] = value;
+  });
 
-    return obj;
-};
+  return obj;
+}
 
-const arr: [string , number | boolean][] = [
-    ["keyOne", 1], 
-    ["keyTwo", 2], 
-    ["keyThree", true],
+const arr: [string, number | boolean][] = [
+  ["keyOne", 1],
+  ["keyTwo", 2],
+  ["keyThree", true],
 ];
 
-
-const obj = aToO(arr)
+const obj = aToO(arr);
