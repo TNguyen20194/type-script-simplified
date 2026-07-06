@@ -1,87 +1,85 @@
 /*
 You are given an array of characters:
-
 const A = ['a', 'a', 'b', 'a', 'c', 'b', 'c', 'a', 'd', 'a', 'c'];
-
 And a set of required characters:
-
 const S = new Set(['a', 'b', 'c', 'd']);
-
 Finds the smallest continuous sub-array of A that contains every character in S at least once.
-
 A sub-array must keep the original order and must be continuous.
-
 */
 
 const A = ["a", "a", "b", "a", "c", "b", "c", "a", "d", "a", "c"];
 const S = new Set(["a", "b", "c", "d"]);
 
 function findSubArray(A, S) {
-    if(!A || !S || S.size === 0) return null;
 
-    //How many unique characters we need for smallest subarray
-    const required = S.size
+  //How many unique characters we need for smallest subarray
+  const required = S.size;
 
-    // Track how many characters we currently have
-    // Then compare it to the required characters
-    let have = 0;
+  /*
+  - Track how many characters we currently have to compare against required
+  - Define starting min length for slicing the array
+  - Define starting index (0) for when we shrink the length
+  */
 
-    // Characters in current window
-    const windowCount = {};
+  let have = 0;
+  let left = 0;
+  let minLength = Infinity;
+  let minStart = 0;
 
-    let left = 0;
-    let minLength = Infinity;
-    let minStart = 0;
+  // Window to keep track of all character frequency
+  const windowCount = {};
 
-    // log all characters in A into window
-    for(let right = 0; right < A.length; right ++) {
-        const char = A[right];
-        
-        windowCount[char] = (windowCount[char] || 0) + 1;
-        console.log("Characters logged in widnow: ", A[right], windowCount)
+  /*
+  - Log all characters in A into the window - moving from left to right across the entire array
+  - Track all characters in windowCount
+  - If we have the characters required, shrink the windowCount
+  */
+  for (let right = 0; right < A.length; right++) {
+    let char = A[right];
 
-        // Check if this char is required and we now have it for the first time
-        if(S.has(char) && windowCount[char] === 1) {
-            have ++;
-            console.log("Chars we have: ", have)
-        }
-        
-        
-        // Shrink the window from left while we have all the required chars
-        while(have === required && left < right) {
-            //Update minimum
-            if(right - left + 1 < minLength){
-                minLength = right - left + 1;
-                minStart = left;
-            };
+    windowCount[char] = (windowCount[char] || 0) + 1;
+    console.log("Current Window: ", windowCount);
+    console.log(`Char: ${char} - Count in window: ${windowCount[char]}`);
 
-            //Remove left chars
-            const leftChar = A[left];
-            windowCount[leftChar]--;
-
-
-            if(S.has(leftChar) && windowCount[leftChar] === 0) {
-                have--;
-            }
-
-            left++;
-        }
-    }
-    if(minLength === Infinity) {
-        return null // No valid subarray found
+    // If this is a required character and the first time it appears in the window
+    // Increase have
+    if (S.has(char) && windowCount[char] === 1) {
+      have++;
     }
 
-    const result = A.slice(minStart, minStart + minLength);
+    console.log("Have is: ", have);
 
-    console.log("Smallest sub-array:", result);
-    console.log("Start index:", minStart);
-    console.log("Length:", minLength);
-    
-    return {
-        subArray: result,
-        startIndex: minStart,
-        length: minLength
-    };
+    // While we have a valid window, we make it as small as possible
+    // Shrink and update the smallest length
+    // Current: ['a', 'a', 'b', 'a', 'c', 'b', 'c', 'a', 'd']
+    //           left(0)                               right(8)
+
+    while (have === required && left <= right) {
+      // Update minLength if the current window is smaller
+      if (right - left + 1 < minLength) {
+        minLength = right - left + 1;
+        minStart = left;
+      }
+
+      const leftChar = A[left];
+      windowCount[leftChar]--;
+
+      if (S.has(leftChar) && windowCount[leftChar] === 0) {
+        have--;
+      }
+
+      left++;
+    }
+  }
+
+  //After the entire loop
+  if (minLength === Infinity) {
+    return null; // No valid subarray
+  }
+  const result = A.slice(minStart, minStart + minLength);
+
+  console.log("Smallest subarray is: ", result);
+  return result;
 }
 
 findSubArray(A, S);
