@@ -83,3 +83,11 @@ function findSubArray(A, S) {
 }
 
 findSubArray(A, S);
+
+/*
+Keep expanding with right until we have all required characters.
+Once we have all required characters, shrink from left as much as possible.
+Every valid shrink is a possible answer.
+Keep the shortest one.
+
+*/
